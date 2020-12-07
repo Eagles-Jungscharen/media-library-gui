@@ -9,10 +9,9 @@ import { AuthenticationService } from "./services/authentication.service";
 export class AppComponent {
   title = "media-library-gui";
   constructor(private authenticationService: AuthenticationService) {
-    this.authenticationService.authenticationStatusSubject.subscribe(
-      (value) => {
-        console.log("Authentication Status: " + value);
-      }
-    );
+    this.authenticationService.authenticationStatusSubject.subscribe((value) => {
+      console.log("Authentication Status: " + value);
+    });
+    this.authenticationService.currentUserSubject.subscribe((value) => console.log(value));
   }
 }

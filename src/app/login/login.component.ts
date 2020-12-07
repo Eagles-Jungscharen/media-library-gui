@@ -18,14 +18,9 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   doLogin() {
-    this.authenticationService
-      .authenticate(
-        this.loginForm.get("username").value,
-        this.loginForm.get("password").value
-      )
-      .subscribe(
-        (value) => console.log("LOGINN GEGLÜCKT"),
-        (error) => console.log("WAR WOL NIX: " + error)
-      );
+    this.authenticationService.authenticate(this.loginForm.get("username").value, this.loginForm.get("password").value).subscribe(
+      (value) => console.log("LOGINN GEGLÜCKT"),
+      (error) => console.log("WAR WOL NIX: " + error)
+    );
   }
 }
