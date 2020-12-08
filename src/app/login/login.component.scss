@@ -1,0 +1,15 @@
+.login-card {
+    width: 400px;
+    flex-direction: column;
+    margin: 5px;
+    display: flex;
+}
+
+.login-main {
+    justify-items: center;
+    display: grid;
+}
+
+.login-field {
+    width: 100%;
+}

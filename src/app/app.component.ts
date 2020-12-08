@@ -7,6 +7,8 @@ import { AuthenticationService } from "./services/authentication.service";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
+  isMenuOpen = true;
+
   title = "media-library-gui";
   constructor(private authenticationService: AuthenticationService) {
     this.authenticationService.authenticationStatusSubject.subscribe((value) => {
@@ -14,4 +16,9 @@ export class AppComponent {
     });
     this.authenticationService.currentUserSubject.subscribe((value) => console.log(value));
   }
+
+  getProfilePicture(): string {
+    return null;
+  }
+  logout(): void {}
 }
