@@ -8,6 +8,7 @@ import { AuthenticationService } from "../services/authentication.service";
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
+  loading = false;
   loginForm = new FormGroup({
     username: new FormControl(""),
     password: new FormControl(""),
@@ -18,9 +19,17 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   doLogin() {
+    this.loading = true;
     this.authenticationService.authenticate(this.loginForm.get("username").value, this.loginForm.get("password").value).subscribe(
-      (value) => console.log("LOGINN GEGLÜCKT"),
-      (error) => console.log("WAR WOL NIX: " + error)
+      (value) => {
+        console.log("LOGINN GEGLÜCKT");
+        this.loading = false;
+      },
+      (error) => {
+        console.log("WAR WOL NIX: " + error);
+        console.dir(error);
+        this.loading = false;
+      }
     );
   }
 }
