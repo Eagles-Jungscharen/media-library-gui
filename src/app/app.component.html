@@ -7,7 +7,8 @@
             <span class="text">Media Library</span>
             <span class="filler"></span>
             <!-- TODO: Profile picture implementation -->
-            <img [matMenuTriggerFor]="menu" class="profile" alt="p" [attr.src]="getProfilePicture() || '../assets/pfp.svg'" />
+            <mat-icon [matMenuTriggerFor]="menu" class="profile">account_circle</mat-icon>
+            <!--  <img [matMenuTriggerFor]="menu" class="profile" alt="p" [attr.src]="getProfilePicture() || '../assets/pfp.svg'" /> -->
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="logout()">Abmelden</button>
             </mat-menu>

@@ -1,16 +1,29 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { BehaviorSubject } from "rxjs";
+import { User } from "../models/user";
+import { AuthenticationService } from "../services/authentication.service";
 
-import { LoginComponent } from './login.component';
+import { LoginComponent } from "./login.component";
+import { MatModule } from "../mat.module";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ReactiveFormsModule } from "@angular/forms";
 
-describe('LoginComponent', () => {
+describe("LoginComponent", () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  const ass = new BehaviorSubject("NIXT");
+  const cus = new BehaviorSubject(User.createNoUser());
 
   beforeEach(async () => {
+    const authService = jasmine.createSpyObj("AuthenticationService", ["authenticationStatusSubject", "currentUserSubject"]);
+    authService.authenticationStatusSubject = ass;
+    authService.currentUserSubject = cus;
+
     await TestBed.configureTestingModule({
-      declarations: [ LoginComponent ]
-    })
-    .compileComponents();
+      declarations: [LoginComponent],
+      providers: [{ provide: AuthenticationService, useValue: authService }],
+      imports: [MatModule, BrowserAnimationsModule, ReactiveFormsModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +32,7 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

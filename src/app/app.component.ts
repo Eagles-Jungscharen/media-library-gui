@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
-import { AuthenticationService } from "./services/authentication.service";
+import { Router } from "@angular/router";
+import { User } from "./models/user";
+import { ApplicationStatus, AuthenticationService } from "./services/authentication.service";
 
 @Component({
   selector: "app-root",
@@ -8,17 +10,28 @@ import { AuthenticationService } from "./services/authentication.service";
 })
 export class AppComponent {
   isMenuOpen = true;
+  applicationStatus: ApplicationStatus;
+  currentUser: User;
 
   title = "media-library-gui";
-  constructor(private authenticationService: AuthenticationService) {
+  constructor(private authenticationService: AuthenticationService, private router: Router) {
     this.authenticationService.authenticationStatusSubject.subscribe((value) => {
       console.log("Authentication Status: " + value);
+      this.applicationStatus = value;
+      if (value == ApplicationStatus.UNAUTHENTICATED) {
+        this.router.navigateByUrl("/login");
+      }
     });
-    this.authenticationService.currentUserSubject.subscribe((value) => console.log(value));
+    this.authenticationService.currentUserSubject.subscribe((value) => {
+      this.currentUser = value;
+      console.log(value);
+    });
   }
 
   getProfilePicture(): string {
     return null;
   }
-  logout(): void {}
+  logout(): void {
+    this.authenticationService.logout();
+  }
 }

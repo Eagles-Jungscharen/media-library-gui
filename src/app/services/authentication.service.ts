@@ -6,11 +6,17 @@ import { environment } from "src/environments/environment";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { User } from "../models/user";
 
+export enum ApplicationStatus {
+  LOADING,
+  AUTHENTICATED,
+  UNAUTHENTICATED,
+}
+
 @Injectable({ providedIn: "root" })
 export class AuthenticationService {
   private jwtHelper: JwtHelperService;
-  authenticationStatusSubject = new BehaviorSubject("LOADING");
-  currentUserSubject = new BehaviorSubject(User.createNoUser());
+  authenticationStatusSubject = new BehaviorSubject<ApplicationStatus>(ApplicationStatus.LOADING);
+  currentUserSubject = new BehaviorSubject<User>(User.createNoUser());
 
   constructor(private httpClient: HttpClient) {
     this.jwtHelper = new JwtHelperService();
@@ -18,9 +24,9 @@ export class AuthenticationService {
     const refreshToken = localStorage.getItem("ml_refreshtoken");
     if (accessToken && accessToken !== "") {
       this.extractUser(accessToken);
-      this.authenticationStatusSubject.next("LOGGEDIN");
+      this.authenticationStatusSubject.next(ApplicationStatus.AUTHENTICATED);
     } else {
-      this.authenticationStatusSubject.next("LOGGEDOUT");
+      this.authenticationStatusSubject.next(ApplicationStatus.UNAUTHENTICATED);
     }
   }
 
@@ -34,10 +40,25 @@ export class AuthenticationService {
         map((value) => {
           this.processTokens(value.access_token, value.refresh_token);
           this.extractUser(value.access_token);
-          this.authenticationStatusSubject.next("LOGGEDIN");
+          this.authenticationStatusSubject.next(ApplicationStatus.AUTHENTICATED);
           return true;
         })
       );
+  }
+
+  logout(): void {
+    localStorage.removeItem("ml_accesstoken");
+    localStorage.removeItem("ml_refreshtoken");
+    this.authenticationStatusSubject.next(ApplicationStatus.UNAUTHENTICATED);
+    this.currentUserSubject.next(User.createNoUser());
+  }
+
+  get applicationStatus(): ApplicationStatus {
+    return this.authenticationStatusSubject.getValue();
+  }
+
+  get currentUser(): User {
+    return this.currentUserSubject.getValue();
   }
 
   private processTokens(accessToken: string, refreshToken: string): void {
