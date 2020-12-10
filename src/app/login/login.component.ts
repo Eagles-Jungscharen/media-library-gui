@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   doLogin() {
     this.loading = true;
     this.authenticationService.authenticate(this.loginForm.get("username").value, this.loginForm.get("password").value).subscribe(
-      (value) => {
+      () => {
         this.loading = false;
         setTimeout(() => this.router.navigateByUrl("/overview"), 100);
       },

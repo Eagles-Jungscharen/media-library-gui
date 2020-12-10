@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { BehaviorSubject, Observable, throwError } from "rxjs";
+import { map, catchError } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { User } from "../models/user";
@@ -10,6 +10,10 @@ export enum ApplicationStatus {
   LOADING,
   AUTHENTICATED,
   UNAUTHENTICATED,
+}
+export interface AuthenticationError {
+  error: string;
+  details: string;
 }
 
 @Injectable({ providedIn: "root" })
@@ -30,7 +34,7 @@ export class AuthenticationService {
     }
   }
 
-  authenticate(username: string, password: string): Observable<boolean> {
+  authenticate(username: string, password: string): Observable<void> {
     return this.httpClient
       .post<any>(environment.loginHost + "/api/authenticate", {
         username: username,
@@ -41,8 +45,9 @@ export class AuthenticationService {
           this.processTokens(value.access_token, value.refresh_token);
           this.extractUser(value.access_token);
           this.authenticationStatusSubject.next(ApplicationStatus.AUTHENTICATED);
-          return true;
-        })
+          return;
+        }),
+        catchError(this.errorHandler)
       );
   }
 
@@ -69,5 +74,20 @@ export class AuthenticationService {
     const tokenModel = this.jwtHelper.decodeToken(accessToken);
     const user = User.createUser(tokenModel.firstname, tokenModel.lastname, tokenModel.email);
     this.currentUserSubject.next(user);
+  }
+
+  private errorHandler(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      const authError: AuthenticationError = { error: error.error.message, details: JSON.stringify(error.error) };
+      return throwError(authError);
+    } else {
+      if (error.status === 401) {
+        const authError: AuthenticationError = { error: "Falscher Benutzername / Passwort", details: JSON.stringify(error) };
+        return throwError(authError);
+      } else {
+        const authError: AuthenticationError = { error: "Technischer Fehler", details: JSON.stringify(error) };
+        return throwError(authError);
+      }
+    }
   }
 }
