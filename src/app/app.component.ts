@@ -28,10 +28,20 @@ export class AppComponent {
     });
   }
 
+  isLoggedIn(): boolean {
+    return this.applicationStatus == ApplicationStatus.AUTHENTICATED;
+  }
+
   getProfilePicture(): string {
     return null;
   }
   logout(): void {
     this.authenticationService.logout();
+  }
+  getUserName(): string {
+    return this.currentUser.firstname + " " + this.currentUser.lastname;
+  }
+  getEmail(): string {
+    return this.currentUser.email;
   }
 }

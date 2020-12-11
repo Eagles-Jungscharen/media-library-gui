@@ -7,12 +7,17 @@
             <span class="text">Media Library</span>
             <span class="filler"></span>
             <!-- TODO: Profile picture implementation -->
-            <mat-icon [matMenuTriggerFor]="menu" class="profile">account_circle</mat-icon>
+            <div *ngIf="isLoggedIn()" class="userbox" [matMenuTriggerFor]="menu">
+                <div class="usernamebox">
+                    <span class="userbox-line">{{ getUserName() }}</span> <span class="userbox-line">{{ getEmail() }}</span>
+                </div>
+                <mat-icon class="profile">account_circle</mat-icon>
+            </div>
             <!--  <img [matMenuTriggerFor]="menu" class="profile" alt="p" [attr.src]="getProfilePicture() || '../assets/pfp.svg'" /> -->
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="logout()">Abmelden</button>
-            </mat-menu>
         </mat-toolbar>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="logout()">Abmelden</button>
+        </mat-menu>
     </div>
 
     <mat-drawer-container class="example-container" hasBackdrop="false">
