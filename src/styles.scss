@@ -9,8 +9,8 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$media-library-gui-primary: mat-palette($mat-indigo);
-$media-library-gui-accent: mat-palette($mat-pink, A200, A100, A400);
+$media-library-gui-primary: mat-palette($mat-blue, 800, 900);
+$media-library-gui-accent: mat-palette($mat-grey, 600);
 // The warn palette is optional (defaults to red).
 $media-library-gui-warn: mat-palette($mat-red);
 // Create the theme object (a Sass map containing all of the palettes).
@@ -50,6 +50,6 @@ body {
     margin-left: -10px;
     border-radius: 50%;
     border: 2px solid #ffffff;
-    border-top-color: #d50000;
+    border-top-color: mat-color($media-library-gui-primary);
     animation: button-spinner 0.8s linear infinite;
 }

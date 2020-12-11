@@ -1,8 +1,8 @@
 <div class="root">
     <div class="navbar">
-        <mat-toolbar class="header">
+        <mat-toolbar color="primary">
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
-        <mat-icon class="hamburger-icon" aria-label="Side nav toggle icon">{{ isMenuOpen ? "menu_open" : "menu" }}</mat-icon>
+        <mat-icon class="hamburger-icon" aria-label="Side nav toggle icon">{{ drawer.opened ? "menu_open" : "menu" }}</mat-icon>
       </button>
             <span class="text">Media Library</span>
             <span class="filler"></span>
