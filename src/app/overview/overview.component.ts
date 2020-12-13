@@ -1,15 +1,52 @@
-import { Component, OnInit } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { map } from "rxjs/operators";
+import { CardMenuItem } from "./card/card.component";
 
 @Component({
-  selector: 'app-overview',
-  templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss']
+  selector: "app-overview",
+  templateUrl: "./overview.component.html",
+  styleUrls: ["./overview.component.scss"],
 })
 export class OverviewComponent implements OnInit {
+  cardLayout = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+    map(({ matches }) => {
+      if (matches) {
+        return {
+          columns: 1,
+          miniCard: { cols: 1, rows: 1 },
+          chart: { cols: 1, rows: 2 },
+          table: { cols: 1, rows: 4 },
+          definitions: { cols: 1, rows: 2 },
+        };
+      }
 
-  constructor() { }
+      return {
+        columns: 4,
+        miniCard: { cols: 1, rows: 1 },
+        chart: { cols: 2, rows: 2 },
+        table: { cols: 3, rows: 4 },
+        definitions: { cols: 1, rows: 4 },
+      };
+    })
+  );
+  mcdMenuItems: CardMenuItem[] = [
+    { title: "Neue Definition", actionVerb: "NEW" },
+    { title: "Übersicht", actionVerb: "OVERVIEW" },
+  ];
+  constructor(private breakpointObserver: BreakpointObserver, private router: Router) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  doMCDMenuItemClick(verb: string) {
+    console.log("UND HIER: " + verb);
+    if ("OVERVIEW" === verb) {
+      //TODO: Route to Overview
+      this.router.navigateByUrl("/mcdoverview");
+    }
+    if ("NEW" === verb) {
+      this.router.navigateByUrl("/mediacollectiondefinition/@new");
+    }
   }
-
 }
