@@ -1,0 +1,15 @@
+.mcd-card {
+    width: 800px;
+    flex-direction: column;
+    margin: 5px;
+    display: flex;
+}
+
+.mcd {
+    justify-items: center;
+    display: grid;
+}
+
+.mcd-field {
+    width: 100%;
+}
