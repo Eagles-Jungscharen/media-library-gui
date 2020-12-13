@@ -2,7 +2,9 @@
     <form [formGroup]="mcdForm" (ngSubmit)="save()">
         <mat-card class="mcd-card">
             <mat-card-title>Definition der Mediensammlung</mat-card-title>
-            <mat-card-content>
+            <mat-spinner *ngIf="!isLoaded()" style="align-self: center"></mat-spinner>
+
+            <mat-card-content *ngIf="isLoaded()">
                 <mat-form-field appearance="fill" class="mcd-field">
                     <mat-label>Titel</mat-label>
                     <input matInput type="text" formControlName="title" />
@@ -12,7 +14,7 @@
                     <textarea matInput formControlName="description"></textarea>
                 </mat-form-field>
             </mat-card-content>
-            <mat-card-actions align="end"><button mat-button color="primary" type="submit">Speichern</button> </mat-card-actions>
+            <mat-card-actions align="end" *ngIf="isLoaded()"><button mat-button color="primary" type="submit" [disabled]="isDisabled()">Speichern</button> </mat-card-actions>
         </mat-card>
     </form>
 </div>
