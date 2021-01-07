@@ -13,3 +13,12 @@
 .mcd-field {
     width: 100%;
 }
+
+.mcd-addbutton {
+    justify-content: flex-end;
+    display: flex;
+}
+
+tr.item-detail-row {
+    height: 0;
+}

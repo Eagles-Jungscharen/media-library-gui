@@ -2,6 +2,7 @@ import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { map } from "rxjs/operators";
+import { MediaCollectionDefinitionService } from "../services/media-collection-definition.service";
 import { CardMenuItem } from "./card/card.component";
 
 @Component({
@@ -35,9 +36,11 @@ export class OverviewComponent implements OnInit {
     { title: "Neue Definition", actionVerb: "NEW" },
     { title: "Übersicht", actionVerb: "OVERVIEW" },
   ];
-  constructor(private breakpointObserver: BreakpointObserver, private router: Router) {}
+  constructor(private breakpointObserver: BreakpointObserver, private router: Router, private mcdService: MediaCollectionDefinitionService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.mcdService.getMediaCollectionDefinitions().subscribe((mcds) => console.log("FOUND: " + mcds));
+  }
 
   doMCDMenuItemClick(verb: string) {
     console.log("UND HIER: " + verb);

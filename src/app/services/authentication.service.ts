@@ -51,6 +51,10 @@ export class AuthenticationService {
       );
   }
 
+  getToken(): string {
+    return localStorage.getItem("ml_accesstoken");
+  }
+
   logout(): void {
     localStorage.removeItem("ml_accesstoken");
     localStorage.removeItem("ml_refreshtoken");

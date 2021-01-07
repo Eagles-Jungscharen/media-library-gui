@@ -21,7 +21,9 @@
         </mat-grid-tile>
         <mat-grid-tile [colspan]="(cardLayout | async)?.definitions.cols" [rowspan]="(cardLayout | async)?.definitions.rows">
             <app-card title="Mediensammlungen" [menuItems]="mcdMenuItems" (onMenuClicked)="doMCDMenuItemClick($event)">
-                <div>Table Content Here</div>
+                <div>
+                    <app-mcd-table></app-mcd-table>
+                </div>
             </app-card>
         </mat-grid-tile>
     </mat-grid-list>

@@ -19,7 +19,7 @@ export class MediaCollectionDefinitionService {
     }
   }
   saveMediaCollectionDefinition(mcd: MediaCollectionDefinition): Observable<MediaCollectionDefinition> {
-    return this.client.post<MediaCollectionDefinition>(environment.mediaHost + "/api/mcd", mcd);
+    return this.client.post<MediaCollectionDefinition>(environment.mediaHost + "/api/mcd/", mcd);
   }
   getMediaCollectionDefinitions(): Observable<MediaCollectionDefinition[]> {
     return this.client.get<MediaCollectionDefinition[]>(environment.mediaHost + "/api/mcd");

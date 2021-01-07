@@ -16,4 +16,5 @@ export class MediaItemDefinition {
   title: string;
   description: string;
   type: MediaItemType;
+  status: MediaItemStatus;
 }
