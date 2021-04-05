@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { BehaviorSubject, Observable, throwError } from "rxjs";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
+import { BehaviorSubject, Observable, of, throwError } from "rxjs";
 import { map, catchError } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { JwtHelperService } from "@auth0/angular-jwt";
@@ -51,8 +51,31 @@ export class AuthenticationService {
       );
   }
 
-  getToken(): string {
-    return localStorage.getItem("ml_accesstoken");
+  getToken(): Observable<string> {
+    const token = localStorage.getItem("ml_accesstoken");
+    const refreshToken = localStorage.getItem("ml_refreshtoken");
+    const isExpired = this.jwtHelper.isTokenExpired(token);
+    if (isExpired) {
+      console.log("RT: " + refreshToken);
+      const headers = new HttpHeaders({ Authorization: "Bearer " + token });
+      return this.httpClient
+        .post<any>(
+          environment.loginHost + "/api/refresh",
+          {
+            refreshToken: refreshToken,
+          },
+          { headers: headers }
+        )
+        .pipe(
+          map((value) => {
+            const token = value.access_token;
+            this.processTokens(value.access_token, value.refresh_token);
+            return token;
+          })
+        );
+    } else {
+      return of(localStorage.getItem("ml_accesstoken"));
+    }
   }
 
   logout(): void {
