@@ -52,4 +52,7 @@ export class OverviewComponent implements OnInit {
       this.router.navigateByUrl("/mediacollectiondefinition/@new");
     }
   }
+  createMediaItem() {
+    this.router.navigateByUrl("/mediaitem/@new");
+  }
 }

@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { env } from "process";
 import { Observable, of } from "rxjs";
 import { environment } from "src/environments/environment";
 import { MediaCollectionDefinition } from "../models/media-collection-definition";

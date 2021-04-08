@@ -26,9 +26,10 @@ import { McdTableComponent } from './mcd-table/mcd-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MediaItemComponent } from './media-item/media-item.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, OverviewComponent, MediaCollectionDefinitionComponent, MediaItemDefinitionComponentComponent, DashComponent, CardComponent, McdTableComponent],
+  declarations: [AppComponent, LoginComponent, OverviewComponent, MediaCollectionDefinitionComponent, MediaItemDefinitionComponentComponent, DashComponent, CardComponent, McdTableComponent, MediaItemComponent],
   imports: [
     HttpClientModule,
     BrowserModule,

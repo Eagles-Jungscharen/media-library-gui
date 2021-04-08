@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  loginHost: "http://localhost:7071",
-  mediaHost: "http://localhost:7072",
+  loginHost: "https://idp.feg-effretikon.ch",
+  mediaHost: "https://media-api.feg-effretikon.ch",
 };
 
 /*

@@ -22,7 +22,9 @@
 
     <mat-drawer-container class="example-container" hasBackdrop="false">
         <mat-drawer #drawer mode="side">
-            <!--<app-sidebar></app-sidebar>-->
+            <mat-nav-list>
+                <a mat-list-item routerLink="/overview">Übersicht</a>
+            </mat-nav-list>
         </mat-drawer>
         <mat-drawer-content>
             <div class="content">
