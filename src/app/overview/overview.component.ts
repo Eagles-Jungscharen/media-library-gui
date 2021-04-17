@@ -2,6 +2,7 @@ import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { map } from "rxjs/operators";
+import { MediaItem } from "../models/media-item";
 import { MediaCollectionDefinitionService } from "../services/media-collection-definition.service";
 import { CardMenuItem } from "./card/card.component";
 
@@ -54,5 +55,8 @@ export class OverviewComponent implements OnInit {
   }
   createMediaItem() {
     this.router.navigateByUrl("/mediaitem/@new");
+  }
+  openMediaItem(item: MediaItem) {
+    this.router.navigateByUrl("/mediaitem/" + item.id);
   }
 }

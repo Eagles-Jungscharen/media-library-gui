@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable } from "@angular/material/table";
@@ -19,6 +19,7 @@ export class MediaItemTableComponent implements AfterViewInit, OnInit {
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ["publish", "titel", "date", "author"];
+  @Output() onRowClick = new EventEmitter<MediaItem>();
 
   constructor(private service: MediaItemService) {}
 
@@ -33,5 +34,9 @@ export class MediaItemTableComponent implements AfterViewInit, OnInit {
   }
   loading(): boolean {
     return this.dataSource.loading;
+  }
+  rowClick(item: MediaItem) {
+    console.log(item);
+    this.onRowClick.emit(item);
   }
 }

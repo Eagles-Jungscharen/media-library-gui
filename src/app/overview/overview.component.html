@@ -10,7 +10,7 @@
         <!--Table-->
         <mat-grid-tile [colspan]="(cardLayout | async)?.table.cols" [rowspan]="(cardLayout | async)?.table.rows">
             <app-card title="Medieneinträge" createButtonTitle="Neuer Medieneintrag" (onButtonClicked)="createMediaItem()">
-                <app-media-item-table></app-media-item-table>
+                <app-media-item-table (onRowClick)="openMediaItem($event)"></app-media-item-table>
             </app-card>
         </mat-grid-tile>
         <mat-grid-tile [colspan]="(cardLayout | async)?.definitions.cols" [rowspan]="(cardLayout | async)?.definitions.rows">
