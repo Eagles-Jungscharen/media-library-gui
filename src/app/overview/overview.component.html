@@ -11,7 +11,7 @@
         <mat-grid-tile [colspan]="(cardLayout | async)?.table.cols" [rowspan]="(cardLayout | async)?.table.rows">
             <app-card title="Medieneinträge">
                 <button mat-raised-button color="primary" (click)="createMediaItem()">Neuer Eintrag</button>
-                <div>Table Content Here</div>
+                <app-media-item-table></app-media-item-table>
             </app-card>
         </mat-grid-tile>
         <mat-grid-tile [colspan]="(cardLayout | async)?.definitions.cols" [rowspan]="(cardLayout | async)?.definitions.rows">

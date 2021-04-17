@@ -27,9 +27,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MediaItemComponent } from './media-item/media-item.component';
+import { MediaItemTableComponent } from './media-item-table/media-item-table.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, OverviewComponent, MediaCollectionDefinitionComponent, MediaItemDefinitionComponentComponent, DashComponent, CardComponent, McdTableComponent, MediaItemComponent],
+  declarations: [AppComponent, LoginComponent, OverviewComponent, MediaCollectionDefinitionComponent, MediaItemDefinitionComponentComponent, DashComponent, CardComponent, McdTableComponent, MediaItemComponent, MediaItemTableComponent],
   imports: [
     HttpClientModule,
     BrowserModule,

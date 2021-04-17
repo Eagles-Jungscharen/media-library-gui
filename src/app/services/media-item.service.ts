@@ -21,4 +21,8 @@ export class MediaItemService {
   saveMediaItem(mediaItem: MediaItem): Observable<MediaItem> {
     return this.client.post<MediaItem>(environment.mediaHost + "/api/mediaitem", mediaItem);
   }
+
+  getAllMediaItem(): Observable<MediaItem[]> {
+    return this.client.get<MediaItem[]>(environment.mediaHost + "/api/mediaitem");
+  }
 }
