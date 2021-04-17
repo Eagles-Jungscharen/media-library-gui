@@ -9,7 +9,7 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$media-library-gui-primary: mat-palette($mat-blue, 800, 900);
+$media-library-gui-primary: mat-palette($mat-blue, 800, 200);
 $media-library-gui-accent: mat-palette($mat-grey, 600);
 // The warn palette is optional (defaults to red).
 $media-library-gui-warn: mat-palette($mat-red);

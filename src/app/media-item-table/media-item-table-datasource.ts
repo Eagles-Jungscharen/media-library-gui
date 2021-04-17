@@ -2,7 +2,7 @@ import { DataSource } from "@angular/cdk/collections";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { map } from "rxjs/operators";
-import { Observable, of as observableOf, merge, BehaviorSubject } from "rxjs";
+import { Observable, merge, BehaviorSubject } from "rxjs";
 import { MediaItem } from "../models/media-item";
 import { MediaItemService } from "../services/media-item.service";
 
@@ -12,7 +12,7 @@ import { MediaItemService } from "../services/media-item.service";
  * (including sorting, pagination, and filtering).
  */
 export class MediaItemTableDataSource extends DataSource<MediaItem> {
-  //data: MediaItem[] = [];
+  loading = true;
   paginator: MatPaginator;
   sort: MatSort;
   dataContainer$: BehaviorSubject<MediaItem[]> = new BehaviorSubject<MediaItem[]>([]);
@@ -27,7 +27,11 @@ export class MediaItemTableDataSource extends DataSource<MediaItem> {
    * @returns A stream of the items to be rendered.
    */
   connect(): Observable<MediaItem[]> {
-    this.service.getAllMediaItem().subscribe((result) => this.dataContainer$.next(result));
+    this.loading = true;
+    this.service.getAllMediaItem().subscribe((result) => {
+      this.loading = false;
+      this.dataContainer$.next(result);
+    });
 
     // Combine everything that affects the rendered data into one update
     // stream for the data-table to consume.
@@ -71,10 +75,12 @@ export class MediaItemTableDataSource extends DataSource<MediaItem> {
     return data.sort((a, b) => {
       const isAsc = this.sort.direction === "asc";
       switch (this.sort.active) {
-        case "title":
+        case "titel":
           return compare(a.titel, b.titel, isAsc);
-        case "id":
-          return compare(+a.id, +b.id, isAsc);
+        case "date":
+          return compare(+a.itemDate, +b.itemDate, isAsc);
+        case "author":
+          return compare(+a.author, +b.author, isAsc);
         default:
           return 0;
       }

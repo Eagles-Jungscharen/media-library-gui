@@ -18,7 +18,7 @@ export class MediaItemTableComponent implements AfterViewInit, OnInit {
   dataSource: MediaItemTableDataSource;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ["id", "title"];
+  displayedColumns = ["publish", "titel", "date", "author"];
 
   constructor(private service: MediaItemService) {}
 
@@ -30,5 +30,8 @@ export class MediaItemTableComponent implements AfterViewInit, OnInit {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.table.dataSource = this.dataSource;
+  }
+  loading(): boolean {
+    return this.dataSource.loading;
   }
 }

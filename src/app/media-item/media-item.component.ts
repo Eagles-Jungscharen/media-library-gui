@@ -57,6 +57,7 @@ export class MediaItemComponent implements OnInit {
     this.miForm.disable();
     this.mediaItem.titel = this.miForm.get("title").value;
     this.mediaItem.description = this.miForm.get("description").value;
+    this.mediaItem.author = this.miForm.get("author").value;
 
     const mcd: MediaCollectionDefinition = this.miForm.get("mediaCollectionDefinition").value;
     this.mediaItem.mediaCollectionId = mcd.id;
