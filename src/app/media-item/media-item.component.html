@@ -18,7 +18,9 @@
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="mi-field">
                     <mat-label>Datum der Aufzeichnung</mat-label>
-                    <input matInput type="text" formControlName="itemDate" />
+                    <input matInput [matDatepicker]="dp" type="text" formControlName="itemDate" disabled />
+                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                    <mat-datepicker #dp disabled="false"></mat-datepicker>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="mi-field">
                     <mat-label>Schlüsselwörter</mat-label>

@@ -29,7 +29,7 @@ export class MediaItemComponent implements OnInit {
       description: new FormControl(""),
       itemDate: new FormControl(""),
       author: new FormControl("", Validators.required),
-      keywords: new FormControl("", Validators.required),
+      keywords: new FormControl([], Validators.required),
       mediaCollectionDefinition: new FormControl("", Validators.required),
     });
   }
@@ -46,6 +46,7 @@ export class MediaItemComponent implements OnInit {
         this.itemLoaded = true;
       });
     });
+    this.miForm.get("itemDate").valueChanges.subscribe((value) => console.log(value));
   }
 
   isLoaded(): boolean {
@@ -63,7 +64,6 @@ export class MediaItemComponent implements OnInit {
     this.mediaItem.description = this.miForm.get("description").value;
     this.mediaItem.author = this.miForm.get("author").value;
     this.mediaItem.keywords = this.miForm.get("keywords").value;
-    //this.mediaItem.entries = mcd.items.map((item) => MediaItemEntry.build(item));
     this.miService.saveMediaItem(this.mediaItem).subscribe((item) => {
       this.mediaItem = item;
       this.miForm.enable();
@@ -75,7 +75,6 @@ export class MediaItemComponent implements OnInit {
     this.mediaItem.titel = this.miForm.get("title").value;
     this.mediaItem.description = this.miForm.get("description").value;
     this.mediaItem.author = this.miForm.get("author").value;
-
     const mcdId: string = this.miForm.get("mediaCollectionDefinition").value;
     this.mediaItem.mediaCollectionId = mcdId;
     this.mediaItem.id = "@new";
@@ -92,7 +91,7 @@ export class MediaItemComponent implements OnInit {
     this.miForm.get("title").setValue(this.mediaItem.titel);
     this.miForm.get("description").setValue(this.mediaItem.description);
     this.miForm.get("author").setValue(this.mediaItem.author);
-    this.miForm.get("itemDate").setValue(this.mediaItem.itemDate);
+    this.miForm.get("itemDate").setValue(new Date(this.mediaItem.itemDate));
     this.miForm.get("keywords").setValue(this.mediaItem.keywords || []);
     const mcdElement = this.miForm.get("mediaCollectionDefinition");
     mcdElement.setValue(this.mediaItem.mediaCollectionId);
@@ -102,14 +101,10 @@ export class MediaItemComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
-
-    // Add our fruit
     if ((value || "").trim()) {
       this.miForm.get("keywords").value.push(value);
       this.miForm.get("keywords").updateValueAndValidity();
     }
-
-    // Reset the input value
     if (input) {
       input.value = "";
     }
@@ -117,7 +112,6 @@ export class MediaItemComponent implements OnInit {
 
   remove(keyword: string): void {
     const index = this.miForm.get("keywords").value.indexOf(keyword);
-
     if (index >= 0) {
       this.miForm.get("keywords").value.splice(index, 1);
       this.miForm.get("keywords").updateValueAndValidity();
