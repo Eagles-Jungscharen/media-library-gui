@@ -7,6 +7,7 @@ import { MediaItem, MediaItemEntry } from "../models/media-item";
 import { MediaCollectionDefinitionService } from "../services/media-collection-definition.service";
 import { MediaItemService } from "../services/media-item.service";
 import { COMMA, ENTER, SPACE } from "@angular/cdk/keycodes";
+import { DateAdapter } from "@angular/material/core";
 
 @Component({
   selector: "app-media-item",
@@ -23,7 +24,7 @@ export class MediaItemComponent implements OnInit {
   removable = true;
   selectable = true;
 
-  constructor(private mcdService: MediaCollectionDefinitionService, private activatedRoute: ActivatedRoute, private miService: MediaItemService) {
+  constructor(private mcdService: MediaCollectionDefinitionService, private activatedRoute: ActivatedRoute, private miService: MediaItemService, private _adapter: DateAdapter<any>) {
     this.miForm = new FormGroup({
       title: new FormControl("", Validators.required),
       description: new FormControl(""),
@@ -32,6 +33,7 @@ export class MediaItemComponent implements OnInit {
       keywords: new FormControl([], Validators.required),
       mediaCollectionDefinition: new FormControl("", Validators.required),
     });
+    this._adapter.setLocale(navigator.language);
   }
 
   ngOnInit(): void {
@@ -46,7 +48,7 @@ export class MediaItemComponent implements OnInit {
         this.itemLoaded = true;
       });
     });
-    this.miForm.get("itemDate").valueChanges.subscribe((value) => console.log(value));
+    this.miForm.get("itemDate").valueChanges.subscribe((value) => console.log(value.toISOString(true)));
   }
 
   isLoaded(): boolean {
@@ -64,6 +66,7 @@ export class MediaItemComponent implements OnInit {
     this.mediaItem.description = this.miForm.get("description").value;
     this.mediaItem.author = this.miForm.get("author").value;
     this.mediaItem.keywords = this.miForm.get("keywords").value;
+    this.mediaItem.itemDate = this.miForm.get("itemDate").value.toISOString(true);
     this.miService.saveMediaItem(this.mediaItem).subscribe((item) => {
       this.mediaItem = item;
       this.miForm.enable();
@@ -92,6 +95,7 @@ export class MediaItemComponent implements OnInit {
     this.miForm.get("description").setValue(this.mediaItem.description);
     this.miForm.get("author").setValue(this.mediaItem.author);
     this.miForm.get("itemDate").setValue(new Date(this.mediaItem.itemDate));
+    this.miForm.get("itemDate").disable();
     this.miForm.get("keywords").setValue(this.mediaItem.keywords || []);
     const mcdElement = this.miForm.get("mediaCollectionDefinition");
     mcdElement.setValue(this.mediaItem.mediaCollectionId);

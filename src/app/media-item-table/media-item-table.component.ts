@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
+import { DateAdapter } from "@angular/material/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable } from "@angular/material/table";
@@ -21,7 +22,9 @@ export class MediaItemTableComponent implements AfterViewInit, OnInit {
   displayedColumns = ["publish", "titel", "date", "author"];
   @Output() onRowClick = new EventEmitter<MediaItem>();
 
-  constructor(private service: MediaItemService) {}
+  constructor(private service: MediaItemService, private _adapter: DateAdapter<any>) {
+    this._adapter.setLocale(navigator.language);
+  }
 
   ngOnInit() {
     this.dataSource = new MediaItemTableDataSource(this.service);
