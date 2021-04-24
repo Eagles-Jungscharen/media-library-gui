@@ -1,0 +1,17 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title>{{ definition.title }}</mat-panel-title>
+        <mat-panel-description>
+            {{ definition.description }}
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <input type="file" class="file-input" [accept]="getRequiredFileType(entry)" (change)="onFileSelected($event)" #fileUpload />
+    <div class="file-upload">
+        {{ fileName || "No file uploaded yet." }}
+        <button mat-mini-fab color="primary" class="upload-btn" type="button" (click)="fileUpload.click()"><mat-icon>attach_file</mat-icon></button>
+    </div>
+    <div class="progress">
+        <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress"> </mat-progress-bar>
+        <mat-icon class="cancel-upload" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>
+    </div>
+</mat-expansion-panel>

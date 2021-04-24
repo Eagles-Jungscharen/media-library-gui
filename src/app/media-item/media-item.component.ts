@@ -8,6 +8,8 @@ import { MediaCollectionDefinitionService } from "../services/media-collection-d
 import { MediaItemService } from "../services/media-item.service";
 import { COMMA, ENTER, SPACE } from "@angular/cdk/keycodes";
 import { DateAdapter } from "@angular/material/core";
+import { Subscription } from "rxjs";
+import { MediaItemDefinition } from "../models/media-item-definition";
 
 @Component({
   selector: "app-media-item",
@@ -23,6 +25,9 @@ export class MediaItemComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
   removable = true;
   selectable = true;
+  fileName: string;
+  uploadProgress: number;
+  uploadSub: Subscription;
 
   constructor(private mcdService: MediaCollectionDefinitionService, private activatedRoute: ActivatedRoute, private miService: MediaItemService, private _adapter: DateAdapter<any>) {
     this.miForm = new FormGroup({
@@ -120,5 +125,11 @@ export class MediaItemComponent implements OnInit {
       this.miForm.get("keywords").value.splice(index, 1);
       this.miForm.get("keywords").updateValueAndValidity();
     }
+  }
+  entries(): MediaItemEntry[] {
+    return this.mediaItem.entries;
+  }
+  getMediaItemDefinition(entry: MediaItemEntry): MediaItemDefinition {
+    return this.mediaCollectionDefinitions.find((mcd) => mcd.id === this.mediaItem.mediaCollectionId).items.find((ci) => ci.key == entry.collectionItemKey);
   }
 }

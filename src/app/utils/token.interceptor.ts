@@ -14,7 +14,7 @@ export class TokenInterceptor implements HttpInterceptor {
     this.byPassURL.push(environment.loginHost + "/api/refresh");
   }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.byPassURL.includes(request.url)) {
+    if (this.byPassURL.includes(request.url) || this.auth.isByPassUrl(request.url)) {
       return next.handle(request);
     }
     return this.auth.getToken().pipe(

@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, Observable, of, throwError } from "rxjs";
-import { map, catchError } from "rxjs/operators";
+import { map, catchError, filter, take } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { User } from "../models/user";
+import { B } from "@angular/cdk/keycodes";
 
 export enum ApplicationStatus {
   LOADING,
@@ -21,6 +22,9 @@ export class AuthenticationService {
   private jwtHelper: JwtHelperService;
   authenticationStatusSubject = new BehaviorSubject<ApplicationStatus>(ApplicationStatus.LOADING);
   currentUserSubject = new BehaviorSubject<User>(User.createNoUser());
+
+  private refreshTokenObservable: BehaviorSubject<string> = null;
+  private mediaByPassUrl = [];
 
   constructor(private httpClient: HttpClient) {
     this.jwtHelper = new JwtHelperService();
@@ -58,21 +62,30 @@ export class AuthenticationService {
     if (isExpired) {
       console.log("RT: " + refreshToken);
       const headers = new HttpHeaders({ Authorization: "Bearer " + token });
-      return this.httpClient
-        .post<any>(
-          environment.loginHost + "/api/refresh",
-          {
-            refreshToken: refreshToken,
-          },
-          { headers: headers }
-        )
-        .pipe(
-          map((value) => {
-            const token = value.access_token;
-            this.processTokens(value.access_token, value.refresh_token);
-            return token;
-          })
+      if (this.refreshTokenObservable == null) {
+        this.refreshTokenObservable = new BehaviorSubject<string>(null);
+        this.refreshTokenObservable.pipe(
+          filter((token) => token != null),
+          take(1)
         );
+        this.httpClient
+          .post<any>(
+            environment.loginHost + "/api/refresh",
+            {
+              refreshToken: refreshToken,
+            },
+            { headers: headers }
+          )
+          .pipe(
+            map((value) => {
+              const token = value.access_token;
+              this.processTokens(value.access_token, value.refresh_token);
+              this.refreshTokenObservable.next(token);
+              return token;
+            })
+          );
+      }
+      return this.refreshTokenObservable;
     } else {
       return of(localStorage.getItem("ml_accesstoken"));
     }
@@ -116,5 +129,12 @@ export class AuthenticationService {
         return throwError(authError);
       }
     }
+  }
+
+  addMediaByPassUrl(url: string) {
+    this.mediaByPassUrl.push(url);
+  }
+  isByPassUrl(url: string): boolean {
+    return this.mediaByPassUrl.includes(url);
   }
 }

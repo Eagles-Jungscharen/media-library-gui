@@ -39,6 +39,9 @@
                     </mat-select>
                 </mat-form-field>
             </mat-card-content>
+            <mat-accordion *ngIf="isLoaded() && !isNew()" class="example-headers-align" multi>
+                <app-media-item-upload *ngFor="let entry of entries()" [entry]="entry" [definition]="getMediaItemDefinition(entry)"></app-media-item-upload>
+            </mat-accordion>
             <mat-card-actions align="end" *ngIf="isLoaded()">
                 <button *ngIf="!isNew()" mat-button color="primary" type="button" [disabled]="isDisabled()" (click)="save()">Speichern</button>
                 <button *ngIf="isNew()" mat-button color="primary" type="button" [disabled]="isDisabled()" (click)="create()">Erstellen</button>

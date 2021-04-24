@@ -24,6 +24,7 @@ import localeDe from "@angular/common/locales/de-CH";
 
 import localeDeExtra from "@angular/common/locales/extra/de-CH";
 import { registerLocaleData } from "@angular/common";
+import { MediaItemUploadComponent } from './media-item-upload/media-item-upload.component';
 
 registerLocaleData(localeDe, "de-CH", localeDeExtra);
 @NgModule({
@@ -38,6 +39,7 @@ registerLocaleData(localeDe, "de-CH", localeDeExtra);
     McdTableComponent,
     MediaItemComponent,
     MediaItemTableComponent,
+    MediaItemUploadComponent,
   ],
   imports: [HttpClientModule, BrowserModule, BrowserAnimationsModule, ReactiveFormsModule, AppRoutingModule, MatModule, LayoutModule],
   providers: [
