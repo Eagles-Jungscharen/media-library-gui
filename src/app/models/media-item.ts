@@ -18,6 +18,7 @@ export class MediaItemEntry {
   mediaItemId: string;
   collectionItemKey: string;
   value: string;
+  downloadUrl: string;
 
   static build(mcd: MediaItemDefinition): MediaItemEntry {
     const item = new MediaItemEntry();

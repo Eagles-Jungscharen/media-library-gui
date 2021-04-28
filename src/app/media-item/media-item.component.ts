@@ -10,6 +10,8 @@ import { COMMA, ENTER, SPACE } from "@angular/cdk/keycodes";
 import { DateAdapter } from "@angular/material/core";
 import { Subscription } from "rxjs";
 import { MediaItemDefinition } from "../models/media-item-definition";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import * as moment from "moment";
 
 @Component({
   selector: "app-media-item",
@@ -28,8 +30,15 @@ export class MediaItemComponent implements OnInit {
   fileName: string;
   uploadProgress: number;
   uploadSub: Subscription;
+  readOnly: boolean;
 
-  constructor(private mcdService: MediaCollectionDefinitionService, private activatedRoute: ActivatedRoute, private miService: MediaItemService, private _adapter: DateAdapter<any>) {
+  constructor(
+    private mcdService: MediaCollectionDefinitionService,
+    private activatedRoute: ActivatedRoute,
+    private miService: MediaItemService,
+    private _adapter: DateAdapter<any>,
+    private _snackBar: MatSnackBar
+  ) {
     this.miForm = new FormGroup({
       title: new FormControl("", Validators.required),
       description: new FormControl(""),
@@ -53,7 +62,6 @@ export class MediaItemComponent implements OnInit {
         this.itemLoaded = true;
       });
     });
-    this.miForm.get("itemDate").valueChanges.subscribe((value) => console.log(value.toISOString(true)));
   }
 
   isLoaded(): boolean {
@@ -73,6 +81,11 @@ export class MediaItemComponent implements OnInit {
     this.mediaItem.keywords = this.miForm.get("keywords").value;
     this.mediaItem.itemDate = this.miForm.get("itemDate").value.toISOString(true);
     this.miService.saveMediaItem(this.mediaItem).subscribe((item) => {
+      this._snackBar.open("Eintrag gespeichert", "Schliessen", {
+        horizontalPosition: "center",
+        verticalPosition: "top",
+      });
+
       this.mediaItem = item;
       this.miForm.enable();
     });
@@ -90,16 +103,26 @@ export class MediaItemComponent implements OnInit {
     this.mediaItem.entries = mcd.items.map((item) => MediaItemEntry.build(item));
     this.mediaItem.keywords = this.miForm.get("keywords").value;
     this.miService.saveMediaItem(this.mediaItem).subscribe((item) => {
+      this._snackBar.open("Neuer Eintrag erstellt.", "Schliessen", {
+        horizontalPosition: "center",
+        verticalPosition: "top",
+      });
+
       this.mediaItem = item;
       this.miForm.enable();
     });
   }
 
   private applyModelToForm() {
+    if (this.mediaItem.published) {
+      this.miForm.disable();
+    } else {
+      this.miForm.enable();
+    }
     this.miForm.get("title").setValue(this.mediaItem.titel);
     this.miForm.get("description").setValue(this.mediaItem.description);
     this.miForm.get("author").setValue(this.mediaItem.author);
-    this.miForm.get("itemDate").setValue(new Date(this.mediaItem.itemDate));
+    this.miForm.get("itemDate").setValue(moment(this.mediaItem.itemDate));
     this.miForm.get("itemDate").disable();
     this.miForm.get("keywords").setValue(this.mediaItem.keywords || []);
     const mcdElement = this.miForm.get("mediaCollectionDefinition");
@@ -131,5 +154,35 @@ export class MediaItemComponent implements OnInit {
   }
   getMediaItemDefinition(entry: MediaItemEntry): MediaItemDefinition {
     return this.mediaCollectionDefinitions.find((mcd) => mcd.id === this.mediaItem.mediaCollectionId).items.find((ci) => ci.key == entry.collectionItemKey);
+  }
+  publishItem(): void {
+    this.miService.publishItem(this.mediaItem).subscribe((item) => {
+      this._snackBar.open("Veröffentlicht", "Schliessen", {
+        horizontalPosition: "center",
+        verticalPosition: "top",
+      });
+      this.mediaItem = item;
+      this.applyModelToForm();
+    });
+  }
+  unpublishItem(): void {
+    this.miService.unpublishItem(this.mediaItem).subscribe((item) => {
+      this._snackBar.open("Zurückgezogen / Bereit zum Bearbeiten", "Schliessen", {
+        horizontalPosition: "center",
+        verticalPosition: "top",
+      });
+
+      this.mediaItem = item;
+      this.applyModelToForm();
+    });
+  }
+  canPublish(): boolean {
+    return this.isLoaded() && !this.mediaItem.published && !this.isNew() && !this.isDisabled();
+  }
+  canUnpublish(): boolean {
+    return this.isLoaded() && this.mediaItem.published && !this.isNew();
+  }
+  canSave(): boolean {
+    return !this.mediaItem.published && !this.isNew();
   }
 }

@@ -37,7 +37,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSliderModule } from "@angular/material/slider";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatSnackBarModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from "@angular/material/snack-bar";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { MatTabsModule } from "@angular/material/tabs";
@@ -100,6 +100,7 @@ import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPT
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
   ],
 })
 export class MatModule {}

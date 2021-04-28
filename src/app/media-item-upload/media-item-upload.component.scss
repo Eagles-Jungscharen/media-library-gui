@@ -5,4 +5,11 @@
 .file-upload {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.progress {
+    display: flex;
+    justify-content: stretch;
+    background-color: lightgray;
 }

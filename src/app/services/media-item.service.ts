@@ -29,9 +29,9 @@ export class MediaItemService {
     return this.client.get<MediaItem[]>(environment.mediaHost + "/api/mediaitem");
   }
 
-  getUploadFileUrl(id: string, fileName: string) {
+  getUploadFileUrl(id: string, fileName: string, itemKey: string) {
     return this.client
-      .post<UploadUrl>(environment.mediaHost + "/api/GetUploadUrl", { TargetMediaItemId: id, MediaName: fileName })
+      .post<UploadUrl>(environment.mediaHost + "/api/GetUploadUrl", { TargetMediaItemId: id, MediaName: fileName, MediaKey: itemKey })
       .pipe(tap((uploadUrl) => this.authenticationService.addMediaByPassUrl(uploadUrl.url)));
   }
 
@@ -44,5 +44,18 @@ export class MediaItemService {
       observe: "events",
       headers: { "x-ms-blob-type": "BlockBlob" },
     });
+  }
+  updateMediatItemWithFileInfos(id: string, fileName: string, itemKey: string): Observable<MediaItem> {
+    return this.client.post<MediaItem>(environment.mediaHost + "/api/updateMediaItem", { MediaItemId: id, MediaName: fileName, MediaKey: itemKey });
+  }
+  deleteMediaItemContent(id: string, fileName: string, itemKey: string): Observable<MediaItem> {
+    return this.client.post<MediaItem>(environment.mediaHost + "/api/deleteMediaItemContent", { MediaItemId: id, MediaName: fileName, MediaKey: itemKey });
+  }
+
+  publishItem(item: MediaItem) {
+    return this.client.post<MediaItem>(environment.mediaHost + "/api/publishMediaItem", item);
+  }
+  unpublishItem(item: MediaItem) {
+    return this.client.post<MediaItem>(environment.mediaHost + "/api/unpublishMediaItem", item);
   }
 }

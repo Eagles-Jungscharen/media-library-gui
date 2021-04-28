@@ -20,7 +20,7 @@
                     <mat-label>Datum der Aufzeichnung</mat-label>
                     <input matInput [matDatepicker]="dp" type="text" formControlName="itemDate" />
                     <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-                    <mat-datepicker #dp disabled="false"></mat-datepicker>
+                    <mat-datepicker #dp [disabled]="isDisabled()"></mat-datepicker>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="mi-field">
                     <mat-label>Schlüsselwörter</mat-label>
@@ -40,10 +40,12 @@
                 </mat-form-field>
             </mat-card-content>
             <mat-accordion *ngIf="isLoaded() && !isNew()" class="example-headers-align" multi>
-                <app-media-item-upload *ngFor="let entry of entries()" [entry]="entry" [definition]="getMediaItemDefinition(entry)"></app-media-item-upload>
+                <app-media-item-upload *ngFor="let entry of entries()" [entry]="entry" [definition]="getMediaItemDefinition(entry)" [readOnly]="isDisabled()"></app-media-item-upload>
             </mat-accordion>
             <mat-card-actions align="end" *ngIf="isLoaded()">
-                <button *ngIf="!isNew()" mat-button color="primary" type="button" [disabled]="isDisabled()" (click)="save()">Speichern</button>
+                <button *ngIf="canPublish()" mat-button color="primary" type="button" [disabled]="isDisabled()" (click)="publishItem()">Veröffentlichen</button>
+                <button *ngIf="canUnpublish()" mat-button color="primary" type="button" (click)="unpublishItem()">Zurückziehen / Bearbeiten</button>
+                <button *ngIf="canSave()" mat-button color="primary" type="button" [disabled]="isDisabled()" (click)="save()">Speichern</button>
                 <button *ngIf="isNew()" mat-button color="primary" type="button" [disabled]="isDisabled()" (click)="create()">Erstellen</button>
             </mat-card-actions>
         </mat-card>
