@@ -68,10 +68,13 @@ export class MediaItemComponent implements OnInit {
     return this.mcdLoaded && this.itemLoaded;
   }
   isNew(): boolean {
-    return this.mediaItem.id === null;
+    return this.mediaItem.id === "@new";
+  }
+  isInvalid(): boolean {
+    return !this.miForm.valid;
   }
   isDisabled(): boolean {
-    return !this.miForm.valid;
+    return this.miForm.disabled;
   }
   save() {
     this.miForm.disable();
@@ -126,8 +129,12 @@ export class MediaItemComponent implements OnInit {
     this.miForm.get("itemDate").disable();
     this.miForm.get("keywords").setValue(this.mediaItem.keywords || []);
     const mcdElement = this.miForm.get("mediaCollectionDefinition");
-    mcdElement.setValue(this.mediaItem.mediaCollectionId);
-    this.mediaItem.id == "" ? mcdElement.enable() : mcdElement.disable();
+    if (this.mediaItem.id === "@new") {
+      mcdElement.enable();
+    } else {
+      mcdElement.setValue(this.mediaItem.mediaCollectionId);
+      mcdElement.disable();
+    }
   }
 
   add(event: MatChipInputEvent): void {
@@ -177,12 +184,15 @@ export class MediaItemComponent implements OnInit {
     });
   }
   canPublish(): boolean {
-    return this.isLoaded() && !this.mediaItem.published && !this.isNew() && !this.isDisabled();
+    return this.isLoaded() && !this.mediaItem.published && !this.isNew() && !this.miForm.disabled;
   }
   canUnpublish(): boolean {
     return this.isLoaded() && this.mediaItem.published && !this.isNew();
   }
   canSave(): boolean {
     return !this.mediaItem.published && !this.isNew();
+  }
+  itemUpdate(item: MediaItem) {
+    this.mediaItem = item;
   }
 }

@@ -1,4 +1,4 @@
-<div class="login-main">
+<div class="login-main" *ngIf="showLogin()">
     <form [formGroup]="loginForm" (ngSubmit)="doLogin()">
         <mat-card class="login-card">
             <mat-card-title>Login</mat-card-title>
@@ -17,4 +17,13 @@
             </mat-card-actions>
         </mat-card>
     </form>
+</div>
+<div class="login-main" *ngIf="noAccess">
+    <mat-card class="login-card">
+        <mat-card-title>Kein Zugriff</mat-card-title>
+        <mat-card-content> Leider hast du keinen Zugriff auf die Media Verwaltung. Bitte wende dich an den Administrator. </mat-card-content>
+        <mat-card-actions align="end">
+            <button mat-button color="primary" type="button" (click)="doLogout()">Abmelden</button>
+        </mat-card-actions>
+    </mat-card>
 </div>

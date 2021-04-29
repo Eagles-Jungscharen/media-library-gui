@@ -1,7 +1,10 @@
 export class User {
-  firstname: string = "";
-  lastname: string = "";
-  email: string = "";
+  firstName: string = "";
+  lastName: string = "";
+  eMail: string = "";
+  scopes: string[] = [];
+  isAdmin: boolean = false;
+  isContributor: boolean = false;
 
   public static createNoUser(): User {
     return new User();
@@ -9,9 +12,9 @@ export class User {
 
   public static createUser(firstName: string, lastName: string, email: string): User {
     const user = new User();
-    user.firstname = firstName;
-    user.lastname = lastName;
-    user.email = email;
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.eMail = email;
     return user;
   }
 }

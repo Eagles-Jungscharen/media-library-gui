@@ -4,6 +4,7 @@ import { MatSort } from "@angular/material/sort";
 import { MatTable } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { MediaCollectionDefinition } from "../models/media-collection-definition";
+import { AuthenticationService } from "../services/authentication.service";
 import { MediaCollectionDefinitionService } from "../services/media-collection-definition.service";
 import { McdTableDataSource } from "./mcd-table-datasource";
 
@@ -21,7 +22,7 @@ export class McdTableComponent implements AfterViewInit, OnInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ["title", "description", "actions"];
 
-  constructor(private mcdService: MediaCollectionDefinitionService, private router: Router) {}
+  constructor(private mcdService: MediaCollectionDefinitionService, private router: Router, private auth: AuthenticationService) {}
 
   ngOnInit() {
     this.dataSource = new McdTableDataSource(this.mcdService);
@@ -35,5 +36,8 @@ export class McdTableComponent implements AfterViewInit, OnInit {
 
   edit(mcd: MediaCollectionDefinition) {
     this.router.navigateByUrl("mediacollectiondefinition/" + mcd.id);
+  }
+  showActions(): boolean {
+    return this.auth.currentUser.isAdmin;
   }
 }

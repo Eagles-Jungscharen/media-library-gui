@@ -40,13 +40,13 @@
                 </mat-form-field>
             </mat-card-content>
             <mat-accordion *ngIf="isLoaded() && !isNew()" class="example-headers-align" multi>
-                <app-media-item-upload *ngFor="let entry of entries()" [entry]="entry" [definition]="getMediaItemDefinition(entry)" [readOnly]="isDisabled()"></app-media-item-upload>
+                <app-media-item-upload *ngFor="let entry of entries()" [entry]="entry" [definition]="getMediaItemDefinition(entry)" [readOnly]="isDisabled()" (onItemChange)="itemUpdate($event)"></app-media-item-upload>
             </mat-accordion>
             <mat-card-actions align="end" *ngIf="isLoaded()">
-                <button *ngIf="canPublish()" mat-button color="primary" type="button" [disabled]="isDisabled()" (click)="publishItem()">Veröffentlichen</button>
+                <button *ngIf="canPublish()" mat-button color="primary" type="button" [disabled]="isInvalid()" (click)="publishItem()">Veröffentlichen</button>
                 <button *ngIf="canUnpublish()" mat-button color="primary" type="button" (click)="unpublishItem()">Zurückziehen / Bearbeiten</button>
-                <button *ngIf="canSave()" mat-button color="primary" type="button" [disabled]="isDisabled()" (click)="save()">Speichern</button>
-                <button *ngIf="isNew()" mat-button color="primary" type="button" [disabled]="isDisabled()" (click)="create()">Erstellen</button>
+                <button *ngIf="canSave()" mat-button color="primary" type="button" [disabled]="isInvalid()" (click)="save()">Speichern</button>
+                <button *ngIf="isNew()" mat-button color="primary" type="button" [disabled]="isInvalid()" (click)="create()">Erstellen</button>
             </mat-card-actions>
         </mat-card>
     </form>

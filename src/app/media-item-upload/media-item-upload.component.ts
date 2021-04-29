@@ -1,5 +1,6 @@
 import { HttpEventType } from "@angular/common/http";
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { FormControl } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Subscription } from "rxjs";
 import { finalize } from "rxjs/operators";
@@ -21,18 +22,36 @@ export class MediaItemUploadComponent implements OnInit {
   fileName: string;
   uploadProgress: number;
   uploadSub: Subscription;
+  textControl: FormControl;
   constructor(private service: MediaItemService, private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     if (this.entry.value != null) {
-      this.fileName = this.entry.value;
+      this.fileName = this.entry.value || "";
+    }
+    if (this.isTextType()) {
+      this.textControl = new FormControl(this.entry.value);
+      this.textControl.disable();
     }
   }
+  isFileType(): boolean {
+    return this.definition.type == MediaItemType.AUDIO || this.definition.type == MediaItemType.PDF || this.definition.type == MediaItemType.PICTURE || this.definition.type == MediaItemType.VIDEO;
+  }
+  isTextType(): boolean {
+    return this.definition.type == MediaItemType.LINK || this.definition.type == MediaItemType.TEXT;
+  }
   getRequiredFileType(entry: MediaItemEntry) {
-    if (this.definition.type === MediaItemType.AUDIO) {
-      return ".mp3,audio/*";
+    switch (this.definition.type) {
+      case MediaItemType.AUDIO:
+        return ".mp3,audio/*";
+      case MediaItemType.PDF:
+        return "application/pdf";
+      case MediaItemType.VIDEO:
+        return "video/mp4,video/x-m4v,video/*";
+      case MediaItemType.PICTURE:
+        return "image/x-png,image/gif,image/jpeg";
     }
-    return "application/pdf";
+    return "";
   }
 
   onFileSelected(event) {
@@ -77,7 +96,7 @@ export class MediaItemUploadComponent implements OnInit {
     this.onItemChange.next(item);
   }
   startUpload(fileUpload: any) {
-    if (this.fileName == "" || confirm("Aktuelle Datei ersetzen?")) {
+    if (!this.fileName || this.fileName == "" || confirm("Aktuelle Datei ersetzen?")) {
       fileUpload.click();
     }
   }
@@ -96,5 +115,18 @@ export class MediaItemUploadComponent implements OnInit {
   }
   canDownload(): boolean {
     return this.entry.value != null && this.entry.value != "" && this.entry.downloadUrl != null && this.entry.downloadUrl != "";
+  }
+  editText() {
+    this.textControl.enable();
+  }
+  saveText() {
+    this.textControl.disable();
+    this.service.updateMediatItemWithFileInfos(this.entry.mediaItemId, this.textControl.value, this.definition.key).subscribe((mediaItem) => {
+      this.reset(mediaItem);
+      this._snackBar.open(this.definition.title + " gespeichert.", "Schliessen", {
+        horizontalPosition: "center",
+        verticalPosition: "top",
+      });
+    });
   }
 }

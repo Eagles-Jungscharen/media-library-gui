@@ -13,6 +13,11 @@ export class MediaItem {
   author: string;
   keywords: string[] = [];
   entries: MediaItemEntry[] = [];
+  static create(): MediaItem {
+    const mediaItem = new MediaItem();
+    mediaItem.id = "@new";
+    return mediaItem;
+  }
 }
 export class MediaItemEntry {
   mediaItemId: string;

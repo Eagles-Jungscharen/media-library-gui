@@ -39,9 +39,9 @@ export class AppComponent {
     this.authenticationService.logout();
   }
   getUserName(): string {
-    return this.currentUser.firstname + " " + this.currentUser.lastname;
+    return this.currentUser.firstName + " " + this.currentUser.lastName;
   }
   getEmail(): string {
-    return this.currentUser.email;
+    return this.currentUser.eMail;
   }
 }

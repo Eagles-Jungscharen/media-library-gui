@@ -4,6 +4,7 @@ export enum MediaItemStatus {
 }
 
 export enum MediaItemType {
+  TEXT = "text",
   LINK = "link",
   AUDIO = "audio",
   PDF = "pdf",

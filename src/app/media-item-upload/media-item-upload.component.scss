@@ -13,3 +13,21 @@
     justify-content: stretch;
     background-color: lightgray;
 }
+
+.text-input {
+    display: flex;
+}
+
+.text-field {
+    flex-grow: 2;
+}
+
+.exp-panel-align .mat-expansion-panel-header-title,
+.exp-panel-align .mat-expansion-panel-header-description {
+    flex-basis: 0;
+}
+
+.exp-panel-align .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}

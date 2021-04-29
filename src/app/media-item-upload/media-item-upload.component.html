@@ -1,23 +1,35 @@
-<mat-expansion-panel>
+<mat-expansion-panel class="exp-panel-align">
     <mat-expansion-panel-header>
         <mat-panel-title>{{ definition.title }}</mat-panel-title>
         <mat-panel-description>
             {{ definition.description }}
         </mat-panel-description>
     </mat-expansion-panel-header>
-    <input type="file" class="file-input" [accept]="getRequiredFileType(entry)" (change)="onFileSelected($event)" #fileUpload />
-    <div class="file-upload">
-        <span style="flex-grow: 2">{{ fileName || "No file uploaded yet." }}</span>
-        <button mat-mini-fab color="primary" class="upload-btn" type="button" (click)="startUpload(fileUpload)" [disabled]="uploadProgress || readOnly"><mat-icon>attach_file</mat-icon></button>
-        <button mat-mini-fab color="warning" class="upload-btn" type="button" (click)="delete()" [disabled]="uploadProgress || readOnly" *ngIf="fileName != ''" style="margin-left: 10px">
-      <mat-icon>delete_forever</mat-icon>
-    </button>
-        <a *ngIf="entry.value != '' && entry.value != null" [href]="entry.downloadUrl" mat-mini-fab style="margin-left: 10px">
-            <mat-icon>download</mat-icon>
-        </a>
+    <div *ngIf="isFileType()">
+        <input type="file" class="file-input" [accept]="getRequiredFileType(entry)" (change)="onFileSelected($event)" #fileUpload />
+        <div class="file-upload">
+            <span style="flex-grow: 2">{{ fileName || "Keine Datei hochgeladen!" }}</span>
+            <button mat-mini-fab color="primary" class="upload-btn" type="button" (click)="startUpload(fileUpload)" [disabled]="uploadProgress || readOnly"><mat-icon>attach_file</mat-icon></button>
+            <button mat-mini-fab color="warning" class="upload-btn" type="button" (click)="delete()" [disabled]="uploadProgress || readOnly" *ngIf="fileName != ''" style="margin-left: 10px">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+            <a *ngIf="entry.value != '' && entry.value != null" [href]="entry.downloadUrl" mat-mini-fab style="margin-left: 10px">
+                <mat-icon>download</mat-icon>
+            </a>
+        </div>
+        <div class="progress">
+            <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress"> </mat-progress-bar>
+            <mat-icon mat-mini-fab color="accent" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>
+        </div>
     </div>
-    <div class="progress">
-        <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" *ngIf="uploadProgress"> </mat-progress-bar>
-        <mat-icon mat-mini-fab color="accent" (click)="cancelUpload()" *ngIf="uploadProgress">delete_forever</mat-icon>
+    <div *ngIf="isTextType()" class="text-input">
+        <mat-form-field appearance="fill" class="text-field">
+            <mat-label>{{ definition.type | uppercase }}</mat-label>
+            <input matInput [formControl]="textControl" />
+        </mat-form-field>
+        <button mat-mini-fab color="primary" type="button" (click)="saveText()" [disabled]="readOnly" *ngIf="textControl.enabled"><mat-icon>done</mat-icon></button>
+        <button mat-mini-fab color="warning" class="upload-btn" type="button" (click)="editText()" [disabled]="readOnly" *ngIf="textControl.disabled" style="margin-left: 10px">
+      <mat-icon>create</mat-icon>
+    </button>
     </div>
 </mat-expansion-panel>

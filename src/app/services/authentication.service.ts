@@ -31,8 +31,13 @@ export class AuthenticationService {
     const accessToken = localStorage.getItem("ml_accesstoken");
     const refreshToken = localStorage.getItem("ml_refreshtoken");
     if (accessToken && accessToken !== "") {
-      this.extractUser(accessToken);
-      this.authenticationStatusSubject.next(ApplicationStatus.AUTHENTICATED);
+      const that = this;
+      setTimeout(() => {
+        that.fetchMe().subscribe((user) => {
+          this.processUser(user);
+          this.authenticationStatusSubject.next(ApplicationStatus.AUTHENTICATED);
+        });
+      }, 100);
     } else {
       this.authenticationStatusSubject.next(ApplicationStatus.UNAUTHENTICATED);
     }
@@ -47,12 +52,18 @@ export class AuthenticationService {
       .pipe(
         map((value) => {
           this.processTokens(value.access_token, value.refresh_token);
-          this.extractUser(value.access_token);
-          this.authenticationStatusSubject.next(ApplicationStatus.AUTHENTICATED);
+          //this.extractUser(value.access_token);
+          this.fetchMe().subscribe((user) => {
+            this.processUser(user);
+            this.authenticationStatusSubject.next(ApplicationStatus.AUTHENTICATED);
+          });
           return;
         }),
         catchError(this.errorHandler)
       );
+  }
+  fetchMe(): Observable<User> {
+    return this.httpClient.get<User>(environment.mediaHost + "/api/me");
   }
 
   getToken(): Observable<string> {
@@ -103,6 +114,9 @@ export class AuthenticationService {
   private processTokens(accessToken: string, refreshToken: string): void {
     localStorage.setItem("ml_accesstoken", accessToken);
     localStorage.setItem("ml_refreshtoken", refreshToken);
+  }
+  private processUser(user: User) {
+    this.currentUserSubject.next(user);
   }
   private extractUser(accessToken: string): void {
     const tokenModel = this.jwtHelper.decodeToken(accessToken);

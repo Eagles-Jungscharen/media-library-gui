@@ -15,7 +15,7 @@ export class MediaItemService {
 
   getMediaItemById(id: string): Observable<MediaItem> {
     if (id == "@new") {
-      return of(new MediaItem());
+      return of(MediaItem.create());
     } else {
       return this.client.get<MediaItem>(environment.mediaHost + "/api/mediaitem/" + id);
     }
